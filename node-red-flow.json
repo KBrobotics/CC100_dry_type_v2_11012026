@@ -1,0 +1,56 @@
+[
+    {
+        "id": "f1_transformer_indiv",
+        "type": "tab",
+        "label": "Transformer Signals",
+        "disabled": false,
+        "info": "Testowanie sygnałów dla WAGO CC100"
+    },
+    {
+        "id": "inj_t1",
+        "type": "inject",
+        "z": "f1_transformer_indiv",
+        "name": "L1 = 85°C",
+        "props": [{"p": "payload"}],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "payload": "85",
+        "payloadType": "num",
+        "x": 140,
+        "y": 80,
+        "wires": [["ch_t1"]]
+    },
+    {
+        "id": "ch_t1",
+        "type": "change",
+        "z": "f1_transformer_indiv",
+        "name": "Format L1",
+        "rules": [{
+            "t": "set",
+            "p": "payload",
+            "pt": "msg",
+            "to": "{\"LV L1 Winding temperature\": payload}",
+            "tot": "jsonata"
+        }],
+        "x": 330,
+        "y": 80,
+        "wires": [["ws_out_final"]]
+    },
+    {
+        "id": "ws_out_final",
+        "type": "websocket out",
+        "z": "f1_transformer_indiv",
+        "name": "Send to HMI",
+        "server": "ws_config_id",
+        "x": 560,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "ws_config_id",
+        "type": "websocket-listener",
+        "path": "/ws/transformer",
+        "wholemsg": "false"
+    }
+]
